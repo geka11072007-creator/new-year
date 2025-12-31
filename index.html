@@ -1,0 +1,213 @@
+padStart(2,"0")};
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// Снег
+setInterval(() => {
+    const snow = document.createElement("div");
+    snow.className = "snowflake";
+    snow.textContent = "❄";
+    snow.style.left = Math.random() * innerWidth + "px";
+    snow.style.fontSize = 10 + Math.random() * 20 + "px";
+    snow.style.opacity = Math.random();
+    snow.style.animationDuration = 4 + Math.random() * 6 + "s";
+    document.body.appendChild(snow);
+    setTimeout(() => snow.remove(), 10000);
+}, 120);
+
+// Фейерверки
+function fireworks() {
+    setInterval(() => {
+        const fw = document.createElement("div");
+        fw.className = "firework";
+        fw.style.left = Math.random() * innerWidth + "px";
+        fw.style.top = Math.random() * innerHeight + "px";
+        fw.style.background = hsl(${Math.random()*360},100%,60%);
+        document.body.appendChild(fw);
+        setTimeout(() => fw.remove(), 1000);
+    }, 300);
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>С Новым годом!</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(circle at top, #0b4dbb, #020b1a);
+    font-family: 'Arial', sans-serif;
+    color: white;
+}
+
+/* Таймер */
+#timer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(32px, 8vw, 72px);
+    font-weight: bold;
+    z-index: 5;
+    text-shadow: 0 0 20px #fff;
+}
+
+/* Хоровод зверей */
+#animals {
+    position: absolute;
+    width: 70vmin;
+    height: 70vmin;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 25s linear infinite;
+    z-index: 1;
+}
+
+.animal {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+}
+
+.animal img {
+    width: 100%;
+}
+
+.animal:nth-child(1) { top: 0; left: 50%; transform: translateX(-50%); }
+.animal:nth-child(2) { right: 0; top: 50%; transform: translateY(-50%); }
+.animal:nth-child(3) { bottom: 0; left: 50%; transform: translateX(-50%); }
+.animal:nth-child(4) { left: 0; top: 50%; transform: translateY(-50%); }
+
+@keyframes spin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Снег */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    user-select: none;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh); }
+}
+
+/* Дед Мороз */
+#santa {
+    position: absolute;
+    bottom: -300px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    transition: bottom 2s ease-out;
+}
+
+#santa.show {
+    bottom: 40px;
+}
+
+#santa img {
+    width: 180px;
+}
+
+#sign {
+    margin-top: 15px;
+    padding: 15px 25px;
+    background: white;
+    color: red;
+    font-size: clamp(18px, 4vw, 28px);
+    border-radius: 15px;
+    font-weight: bold;
+    animation: upDown 2s ease-in-out infinite;
+}
+
+@keyframes upDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Фейерверки */
+.firework {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: gold;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(6); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div id="animals">
+    <div class="animal"><img src="https://cdn-icons-png.flaticon.com/512/616/616408.png"></div>
+    <div class="animal"><img src="https://cdn-icons-png.flaticon.com/512/616/616430.png"></div>
+    <div class="animal"><img src="https://cdn-icons-png.flaticon.com/512/616/616412.png"></div>
+    <div class="animal"><img src="https://cdn-icons-png.flaticon.com/512/616/616423.png"></div>
+</div>
+
+<div id="timer"></div>
+
+<div id="santa">
+    <img src="https://cdn-icons-png.flaticon.com/512/3468/3468377.png">
+    <div id="sign">Поздравляю всех вас с Новым годом!</div>
+</div>
+
+<audio id="music" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/11/22/audio_4a3b84c6a4.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const timerEl = document.getElementById("timer");
+const santa = document.getElementById("santa");
+const music = document.getElementById("music");
+
+document.body.addEventListener("click", () => {
+    music.play().catch(()=>{});
+}, { once: true });
+
+// Таймер
+const newYear = new Date(`January 1, ${new Date().getFullYear() + 1} 00:00:00`);
+
+function updateTimer() {
+    const now = new Date();
+    const diff = newYear - now;
+
+    if (diff <= 0) {
+        timerEl.style.display = "none";
+        santa.classList.add("show");
+        fireworks();
+        return;
+    }
+
+    const h = Math.floor(diff / 1000 / 60 / 60);
+    const m = Math.floor(diff / 1000 / 60) % 60;
+    const s = Math.floor(diff / 1000) % 60;
+
+    timerEl.textContent =
+        ${String(h).padStart(2,"0")}: +
+        ${String(m).padStart(2,"0")}: +
+        ${String(s).
